@@ -10,6 +10,9 @@ new class extends Component
 {
     public string $name = '';
     public string $email = '';
+    public ?string $country = '';
+    public ?string $phone = '';
+    public ?string $company = '';
 
     /**
      * Mount the component.
@@ -18,6 +21,9 @@ new class extends Component
     {
         $this->name = Auth::user()->name;
         $this->email = Auth::user()->email;
+        $this->country = Auth::user()->country;
+        $this->phone = Auth::user()->phone;
+        $this->company = Auth::user()->company;
     }
 
     /**
@@ -30,6 +36,9 @@ new class extends Component
         $validated = $this->validate([
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'lowercase', 'email', 'max:255', Rule::unique(User::class)->ignore($user->id)],
+            'country' => ['nullable', 'string', 'max:255'],
+            'phone' => ['nullable', 'string', 'max:20'],
+            'company' => ['nullable', 'string', 'max:255'],
         ]);
 
         $user->fill($validated);
@@ -102,6 +111,24 @@ new class extends Component
                     @endif
                 </div>
             @endif
+        </div>
+
+        <div>
+            <x-input-label for="country" :value="__('Country')" />
+            <x-text-input wire:model="country" id="country" name="country" type="text" class="mt-1 block w-full" autocomplete="country" />
+            <x-input-error class="mt-2" :messages="$errors->get('country')" />
+        </div>
+
+        <div>
+            <x-input-label for="phone" :value="__('Phone')" />
+            <x-text-input wire:model="phone" id="phone" name="phone" type="tel" class="mt-1 block w-full" autocomplete="tel" />
+            <x-input-error class="mt-2" :messages="$errors->get('phone')" />
+        </div>
+
+        <div>
+            <x-input-label for="company" :value="__('Company')" />
+            <x-text-input wire:model="company" id="company" name="company" type="text" class="mt-1 block w-full" autocomplete="organization" />
+            <x-input-error class="mt-2" :messages="$errors->get('company')" />
         </div>
 
         <div class="flex items-center gap-4">

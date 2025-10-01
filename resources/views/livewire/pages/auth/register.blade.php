@@ -12,6 +12,9 @@ new #[Layout('layouts.guest')] class extends Component
 {
     public string $name = '';
     public string $email = '';
+    public string $country = '';
+    public string $phone = '';
+    public string $company = '';
     public string $password = '';
     public string $password_confirmation = '';
 
@@ -23,6 +26,9 @@ new #[Layout('layouts.guest')] class extends Component
     $validated = $this->validate([
         'name' => ['required', 'string', 'max:255'],
         'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:'.User::class],
+        'country' => ['nullable', 'string', 'max:255'],
+        'phone' => ['nullable', 'string', 'max:20'],
+        'company' => ['nullable', 'string', 'max:255'],
         'password' => ['required', 'string', 'confirmed', Rules\Password::defaults()],
     ]);
 
@@ -69,6 +75,30 @@ new #[Layout('layouts.guest')] class extends Component
                     <label for="email" class="block text-sm font-medium text-gray-700 mb-1">Email Address</label>
                     <input wire:model="email" id="email" type="email" required
                         placeholder="your@email.com"
+                        class="w-full rounded-xl border-gray-300 focus:border-indigo-500 focus:ring focus:ring-indigo-200 text-gray-800 placeholder-gray-400 transition-all duration-300 px-4 py-2.5 group-hover:shadow-md">
+                </div>
+
+                <!-- Country -->
+                <div class="group">
+                    <label for="country" class="block text-sm font-medium text-gray-700 mb-1">Country</label>
+                    <input wire:model="country" id="country" type="text"
+                        placeholder="Where are you located?"
+                        class="w-full rounded-xl border-gray-300 focus:border-indigo-500 focus:ring focus:ring-indigo-200 text-gray-800 placeholder-gray-400 transition-all duration-300 px-4 py-2.5 group-hover:shadow-md">
+                </div>
+
+                <!-- Phone -->
+                <div class="group">
+                    <label for="phone" class="block text-sm font-medium text-gray-700 mb-1">Phone Number</label>
+                    <input wire:model="phone" id="phone" type="tel"
+                        placeholder="e.g. +1 555 123 4567"
+                        class="w-full rounded-xl border-gray-300 focus:border-indigo-500 focus:ring focus:ring-indigo-200 text-gray-800 placeholder-gray-400 transition-all duration-300 px-4 py-2.5 group-hover:shadow-md">
+                </div>
+
+                <!-- Company -->
+                <div class="group">
+                    <label for="company" class="block text-sm font-medium text-gray-700 mb-1">Company</label>
+                    <input wire:model="company" id="company" type="text"
+                        placeholder="Your organization"
                         class="w-full rounded-xl border-gray-300 focus:border-indigo-500 focus:ring focus:ring-indigo-200 text-gray-800 placeholder-gray-400 transition-all duration-300 px-4 py-2.5 group-hover:shadow-md">
                 </div>
 
