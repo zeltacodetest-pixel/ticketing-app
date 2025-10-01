@@ -8,39 +8,43 @@ use Illuminate\Validation\Rules;
 use Livewire\Attributes\Layout;
 use Livewire\Volt\Component;
 
-new #[Layout('layouts.guest')] class extends Component
-{
+new #[Layout('layouts.guest')] class extends Component {
     public string $name = '';
     public string $email = '';
+    public string $country = '';
+    public string $phone = '';
+    public string $company = '';
     public string $password = '';
     public string $password_confirmation = '';
 
     /**
      * Handle an incoming registration request.
      */
-   public function register(): void
-{
-    $validated = $this->validate([
-        'name' => ['required', 'string', 'max:255'],
-        'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:'.User::class],
-        'password' => ['required', 'string', 'confirmed', Rules\Password::defaults()],
-    ]);
+    public function register(): void
+    {
+        $validated = $this->validate([
+            'name' => ['required', 'string', 'max:255'],
+            'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:' . User::class],
+            'country' => ['nullable', 'string', 'max:255'],
+            'phone' => ['nullable', 'string', 'max:20'],
+            'company' => ['nullable', 'string', 'max:255'],
+            'password' => ['required', 'string', 'confirmed', Rules\Password::defaults()],
+        ]);
 
-    $validated['password'] = Hash::make($validated['password']);
+        $validated['password'] = Hash::make($validated['password']);
 
-    event(new Registered($user = User::create($validated)));
+        event(new Registered(($user = User::create($validated))));
 
-    // 👇 Auto assign Customer role
-    $user->assignRole('Customer');
+        // 👇 Auto assign Customer role
+        $user->assignRole('Customer');
 
-    Auth::login($user);
+        Auth::login($user);
 
-    $this->redirect(route('dashboard', absolute: false), navigate: true);
-}
-
+        $this->redirect(route($user->dashboardRouteName(), absolute: false), navigate: true);
+    }
 }; ?>
 
-    <div>
+<div>
     <div class="w-full max-w-md animate-fade-in">
         <!-- Card -->
         <div class="px-8 py-10">
@@ -67,29 +71,47 @@ new #[Layout('layouts.guest')] class extends Component
                 <!-- Email -->
                 <div class="group">
                     <label for="email" class="block text-sm font-medium text-gray-700 mb-1">Email Address</label>
-                    <input wire:model="email" id="email" type="email" required
-                        placeholder="your@email.com"
+                    <input wire:model="email" id="email" type="email" required placeholder="your@email.com"
+                        class="w-full rounded-xl border-gray-300 focus:border-indigo-500 focus:ring focus:ring-indigo-200 text-gray-800 placeholder-gray-400 transition-all duration-300 px-4 py-2.5 group-hover:shadow-md">
+                </div>
+                <!-- Country -->
+                <div class="group">
+                    <label for="country" class="block text-sm font-medium text-gray-700 mb-1">Country</label>
+                    <input wire:model="country" id="country" type="text" placeholder="Where are you located?"
                         class="w-full rounded-xl border-gray-300 focus:border-indigo-500 focus:ring focus:ring-indigo-200 text-gray-800 placeholder-gray-400 transition-all duration-300 px-4 py-2.5 group-hover:shadow-md">
                 </div>
 
+                <!-- Phone -->
+                <div class="group">
+                    <label for="phone" class="block text-sm font-medium text-gray-700 mb-1">Phone Number</label>
+                    <input wire:model="phone" id="phone" type="tel" placeholder="e.g. +1 555 123 4567"
+                        class="w-full rounded-xl border-gray-300 focus:border-indigo-500 focus:ring focus:ring-indigo-200 text-gray-800 placeholder-gray-400 transition-all duration-300 px-4 py-2.5 group-hover:shadow-md">
+                </div>
+
+                <!-- Company -->
+                <div class="group">
+                    <label for="company" class="block text-sm font-medium text-gray-700 mb-1">Company</label>
+                    <input wire:model="company" id="company" type="text" placeholder="Your organization"
+                        class="w-full rounded-xl border-gray-300 focus:border-indigo-500 focus:ring focus:ring-indigo-200 text-gray-800 placeholder-gray-400 transition-all duration-300 px-4 py-2.5 group-hover:shadow-md">
+                </div>
                 <!-- Password -->
                 <div class="group">
                     <label for="password" class="block text-sm font-medium text-gray-700 mb-1">Password</label>
-                    <input wire:model="password" id="password" type="password" required
-                        placeholder="••••••••"
+                    <input wire:model="password" id="password" type="password" required placeholder="••••••••"
                         class="w-full rounded-xl border-gray-300 focus:border-indigo-500 focus:ring focus:ring-indigo-200 text-gray-800 placeholder-gray-400 transition-all duration-300 px-4 py-2.5 group-hover:shadow-md">
                 </div>
 
                 <!-- Confirm Password -->
                 <div class="group">
-                    <label for="password_confirmation" class="block text-sm font-medium text-gray-700 mb-1">Confirm Password</label>
+                    <label for="password_confirmation" class="block text-sm font-medium text-gray-700 mb-1">Confirm
+                        Password</label>
                     <input wire:model="password_confirmation" id="password_confirmation" type="password" required
                         placeholder="Re-enter password"
                         class="w-full rounded-xl border-gray-300 focus:border-indigo-500 focus:ring focus:ring-indigo-200 text-gray-800 placeholder-gray-400 transition-all duration-300 px-4 py-2.5 group-hover:shadow-md">
                 </div>
 
                 <!-- Submit -->
-                <button type="submit" 
+                <button type="submit"
                     class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-semibold rounded-xl px-4 py-3 transition-all duration-300 transform hover:scale-[1.03] focus:ring focus:ring-indigo-300 hover:shadow-lg">
                     Register
                 </button>
@@ -97,7 +119,7 @@ new #[Layout('layouts.guest')] class extends Component
 
             <!-- Footer -->
             <p class="mt-6 text-center text-sm text-gray-600 animate-fade-in-slow">
-                Already have an account? 
+                Already have an account?
                 <a href="{{ route('login') }}" class="text-indigo-600 hover:underline font-medium">Sign in</a>
             </p>
         </div>
@@ -105,15 +127,40 @@ new #[Layout('layouts.guest')] class extends Component
 
     <!-- Tailwind Animations -->
     <style>
-    @keyframes fade-in { from { opacity:0; transform: translateY(10px);} to { opacity:1; transform: translateY(0);} }
-    @keyframes slide-down { from { opacity:0; transform: translateY(-15px);} to { opacity:1; transform: translateY(0);} }
+        @keyframes fade-in {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
 
-    .animate-fade-in { animation: fade-in 0.8s ease forwards; }
-    .animate-fade-in-slow { animation: fade-in 1.2s ease forwards; }
-    .animate-slide-down { animation: slide-down 0.9s ease forwards; }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes slide-down {
+            from {
+                opacity: 0;
+                transform: translateY(-15px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .animate-fade-in {
+            animation: fade-in 0.8s ease forwards;
+        }
+
+        .animate-fade-in-slow {
+            animation: fade-in 1.2s ease forwards;
+        }
+
+        .animate-slide-down {
+            animation: slide-down 0.9s ease forwards;
+        }
     </style>
 </div>
-
-
-
-

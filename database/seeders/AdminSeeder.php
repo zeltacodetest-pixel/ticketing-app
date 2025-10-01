@@ -13,12 +13,15 @@ class AdminSeeder extends Seeder
      * Run the database seeds.
      */
     public function run(): void
-  {
+    {
         $admin = User::firstOrCreate(
-            ['email' => 'admin@ticket.com'], 
+            ['email' => 'admin@ticket.com'],
             [
                 'name' => 'Super Admin',
-                'password' => Hash::make('00000000'), 
+                'country' => 'United States',
+                'phone' => '+1 555-0000',
+                'company' => 'Ticket HQ',
+                'password' => Hash::make('00000000'),
             ]
         );
 

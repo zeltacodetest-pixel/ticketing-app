@@ -5,8 +5,7 @@ use Illuminate\Support\Facades\Session;
 use Livewire\Attributes\Layout;
 use Livewire\Volt\Component;
 
-new #[Layout('layouts.guest')] class extends Component
-{
+new #[Layout('layouts.guest')] class extends Component {
     public LoginForm $form;
 
     /**
@@ -20,7 +19,10 @@ new #[Layout('layouts.guest')] class extends Component
 
         Session::regenerate();
 
-        $this->redirectIntended(default: route('dashboard', absolute: false), navigate: true);
+        $user = auth()->user();
+        $dashboardRoute = $user ? $user->dashboardRouteName() : 'customer.dashboard';
+
+        $this->redirectIntended(default: route($dashboardRoute, absolute: false), navigate: true);
     }
 }; ?>
 
@@ -55,8 +57,7 @@ new #[Layout('layouts.guest')] class extends Component
                 <!-- Password -->
                 <div class="group">
                     <label for="password" class="block text-sm font-medium text-gray-700 mb-1">Password</label>
-                    <input wire:model="form.password" id="password" type="password" required
-                        placeholder="••••••••"
+                    <input wire:model="form.password" id="password" type="password" required placeholder="••••••••"
                         class="w-full rounded-xl border-gray-300 focus:border-indigo-500 focus:ring focus:ring-indigo-200 text-gray-800 placeholder-gray-400 transition-all duration-300 px-4 py-2.5 group-hover:shadow-md">
                     <x-input-error :messages="$errors->get('form.password')" class="mt-2" />
                 </div>
@@ -86,7 +87,7 @@ new #[Layout('layouts.guest')] class extends Component
 
             <!-- Footer -->
             <p class="mt-6 text-center text-sm text-gray-600 animate-fade-in-slow">
-                Don’t have an account? 
+                Don’t have an account?
                 <a href="{{ route('register') }}" class="text-indigo-600 hover:underline font-medium">Register</a>
             </p>
         </div>
@@ -94,12 +95,40 @@ new #[Layout('layouts.guest')] class extends Component
 
     <!-- Tailwind Animations -->
     <style>
-        @keyframes fade-in { from { opacity:0; transform: translateY(10px);} to { opacity:1; transform: translateY(0);} }
-        @keyframes slide-down { from { opacity:0; transform: translateY(-15px);} to { opacity:1; transform: translateY(0);} }
+        @keyframes fade-in {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
 
-        .animate-fade-in { animation: fade-in 0.8s ease forwards; }
-        .animate-fade-in-slow { animation: fade-in 1.2s ease forwards; }
-        .animate-slide-down { animation: slide-down 0.9s ease forwards; }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes slide-down {
+            from {
+                opacity: 0;
+                transform: translateY(-15px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .animate-fade-in {
+            animation: fade-in 0.8s ease forwards;
+        }
+
+        .animate-fade-in-slow {
+            animation: fade-in 1.2s ease forwards;
+        }
+
+        .animate-slide-down {
+            animation: slide-down 0.9s ease forwards;
+        }
     </style>
 </div>
-
