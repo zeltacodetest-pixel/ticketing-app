@@ -1,6 +1,6 @@
 <x-app-layout>
     <x-slot name="header">
-        <h2 class="font-bold text-2xl text-grey-600 tracking-wide">
+        <h2 class="font-bold text-2xl text-gray-600 tracking-wide">
             🎫 Customer Dashboard
         </h2>
     </x-slot>
