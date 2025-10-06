@@ -11,9 +11,9 @@ class Ticket extends Model
 
     protected $fillable = [
         'user_id',
+        'product_id',
         'title',
         'type',
-        'project',
         'description',
         'status',
         'assigned_to',
@@ -35,5 +35,11 @@ class Ticket extends Model
     public function media()
     {
         return $this->hasMany(TicketMedia::class);
+    }
+
+    // 🔹 A ticket references a product
+    public function product()
+    {
+        return $this->belongsTo(Product::class);
     }
 }
