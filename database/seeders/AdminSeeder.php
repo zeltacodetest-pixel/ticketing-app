@@ -17,7 +17,8 @@ class AdminSeeder extends Seeder
         $admin = User::firstOrCreate(
             ['email' => 'admin@ticket.com'],
             [
-                'name' => 'Super Admin',
+                'first_name' => 'Super',
+                'last_name' => 'Admin',
                 'country' => 'United States',
                 'phone' => '+1 555-0000',
                 'company' => 'Ticket HQ',
