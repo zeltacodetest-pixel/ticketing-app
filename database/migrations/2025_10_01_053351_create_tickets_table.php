@@ -14,9 +14,9 @@ return new class extends Migration
         Schema::create('tickets', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id')->constrained()->onDelete('cascade'); // Customer
+            $table->foreignId('product_id')->constrained()->onDelete('restrict');
             $table->string('title'); // Short subject/summary
-            $table->enum('type', ['sales', 'support']); // Enquiry type
-            $table->string('project')->nullable(); // Project/Product
+            $table->enum('type', ['sale', 'support']); // Enquiry type
             $table->text('description'); // Detailed explanation
             $table->enum('status', ['open', 'assigned', 'in_progress', 'resolved'])->default('open');
             $table->foreignId('assigned_to')->nullable()->constrained('users'); // Developer
