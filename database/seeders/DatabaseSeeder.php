@@ -17,6 +17,7 @@ class DatabaseSeeder extends Seeder
     $this->call([
         RolesSeeder::class,
         AdminSeeder::class,
+        DeveloperSeeder::class,
     ]);
 
     // Optional: create a sample user

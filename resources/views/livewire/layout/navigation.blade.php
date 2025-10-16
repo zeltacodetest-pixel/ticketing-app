@@ -29,8 +29,23 @@ new class extends Component {
 
                 <!-- Desktop Links -->
                 <div class="hidden sm:flex space-x-6">
-                    <x-nav-link :href="route($dashboardRouteName)" :active="request()->routeIs($dashboardRouteName)" wire:navigate> {{ __('Dashboard') }}
+                    <!-- Always show Dashboard -->
+                    <x-nav-link :href="route($dashboardRouteName)" :active="request()->routeIs($dashboardRouteName)" wire:navigate>
+                        {{ __('Dashboard') }}
                     </x-nav-link>
+                    <!-- Show My Tickets for Customer -->
+                    @if ($user && $user->hasRole('Customer'))
+                        <x-nav-link :href="route('customer.tickets.show')" :active="request()->routeIs('customer.tickets.show')" wire:navigate>
+                            {{ __('My Tickets') }}
+                        </x-nav-link>
+                    @endif
+
+                    <!-- Only show Manage Developers for Admin -->
+                    @if ($user && $user->hasRole('Admin'))
+                        <x-nav-link :href="route('admin.developers')" :active="request()->routeIs('admin.developers')" wire:navigate>
+                            {{ __('Manage Developers') }}
+                        </x-nav-link>
+                    @endif
                 </div>
             </div>
 
@@ -85,7 +100,20 @@ new class extends Component {
     <div :class="{ 'block': open, 'hidden': !open }" class="hidden sm:hidden bg-white border-t border-gray-200">
         <div class="pt-3 pb-4 space-y-1">
             <x-responsive-nav-link :href="route($dashboardRouteName)" :active="request()->routeIs($dashboardRouteName)" wire:navigate>
+                {{ __('Dashboard') }}
             </x-responsive-nav-link>
+            @if ($user && $user->hasRole('Customer'))
+                <x-responsive-nav-link :href="route('customer.tickets.show')" :active="request()->routeIs('customer.tickets.show')" wire:navigate>
+                    {{ __('My Tickets') }}
+                </x-responsive-nav-link>
+            @endif
+
+            <!-- Manage Developers for Admin (mobile view) -->
+            @if ($user && $user->hasRole('Admin'))
+                <x-responsive-nav-link :href="route('admin.developers')" :active="request()->routeIs('admin.developers')" wire:navigate>
+                    {{ __('Manage Developers') }}
+                </x-responsive-nav-link>
+            @endif
         </div>
 
         <!-- Responsive Profile Section -->

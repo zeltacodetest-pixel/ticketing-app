@@ -20,10 +20,11 @@ class Ticket extends Model
     ];
 
     // 🔹 A ticket belongs to a customer (user)
-    public function customer()
-    {
-        return $this->belongsTo(User::class, 'user_id');
-    }
+   public function user()
+{
+    return $this->belongsTo(User::class, 'user_id');
+}
+
 
     // 🔹 A ticket may be assigned to a developer (user)
     public function developer()
@@ -42,4 +43,9 @@ class Ticket extends Model
     {
         return $this->belongsTo(Product::class);
     }
+    public function comments()
+{
+    return $this->hasMany(\App\Models\TicketComment::class);
+}
+
 }
